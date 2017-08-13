@@ -11,10 +11,16 @@ MRuby::Build.new do |conf|
     conf.gem :github => 'hamano/mruby-libjwt'
 end
 ```
-## example
+## encode example
 ```ruby
-jwt = JWT.new
-puts jwt.encode
+> jwt = JWT.new
+ => #<JWT:0x5564b7bcf000>
+> jwt.add_grants('{"sub":"1234567890","name": "John Doe","admin": true}')
+ => #<JWT:0x5564b7bcf000>
+> jwt.set_alg(JWT::ALG_HS256, "secret")
+ => #<JWT:0x5564b7bcf000>
+> jwt.encode
+ => "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhZG1pbiI6dHJ1ZSwibmFtZSI6IkpvaG4gRG9lIiwic3ViIjoiMTIzNDU2Nzg5MCJ9.a2ce1BjLKoQZ2sWjrieL7mb-eHsOne0sA1vUcW88Tns"
 ```
 
 ## License
