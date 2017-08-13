@@ -7,6 +7,18 @@ assert("JWT#new") do
   assert_equal(jwt.to_s, '{"alg":"none"}.{}')
 end
 
+assert("JWT#add_grants(json)") do
+  jwt = JWT.new
+  jwt.add_grants('{"foo":"bar"}')
+  assert_equal(jwt.to_s, '{"alg":"none"}.{"foo":"bar"}')
+end
+
+assert("JWT#add_grants(hash)") do
+  jwt = JWT.new
+  jwt.add_grants({"foo" => "bar"})
+  assert_equal(jwt.to_s, '{"alg":"none"}.{"foo":"bar"}')
+end
+
 assert("JWT#hs256 encode") do
   jwt = JWT.new
   jwt.add_grants('{"sub":"1234567890","name": "John Doe","admin": true}')
