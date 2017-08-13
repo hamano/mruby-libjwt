@@ -1,0 +1,6 @@
+name: mruby-libjwt
+description: JWT class
+author: HAMANO Tsukasa
+website: https://github.com/hamano/mruby-libjwt
+protocol: git
+repository: https://github.com/hamano/mruby-libjwt.git
