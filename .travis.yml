@@ -3,6 +3,7 @@ compiler:
   - gcc
   - clang
 before_install:
+    - sudo echo deb http://http.us.debian.org/debian/ testing non-free contrib main >> /etc/apt/sources.list
     - sudo apt-get -qq update
 install:
     - sudo apt-get -qq install rake bison git gperf libjwt-dev
