@@ -7,8 +7,7 @@ before_install:
     - echo "deb http://http.us.debian.org/debian/ buster main" | sudo tee -a /etc/apt/sources.list
     - sudo apt-get -qq update
 install:
-    - sudo apt-get -qq install rake bison git gperf
-    - sudo apt-get -qq --allow-unauthenticated install libjwt-dev
+    - sudo apt-get -qq --allow-unauthenticated install rake bison git gperf libjwt-dev
 before_script:
   - cd ../
   - git clone --depth 1 https://github.com/mruby/mruby.git
