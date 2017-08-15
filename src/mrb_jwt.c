@@ -155,6 +155,14 @@ static mrb_value mrb_jwt_set_alg(mrb_state *mrb, mrb_value self)
 	return self;
 }
 
+static mrb_value mrb_jwt_get_alg(mrb_state *mrb, mrb_value self)
+{
+	mrb_jwt *data = DATA_PTR(self);
+	jwt_alg_t alg;
+	alg = jwt_get_alg(data->jwt);
+	return mrb_fixnum_value(alg);
+}
+
 static mrb_value mrb_jwt_encode(mrb_state *mrb, mrb_value self)
 {
 	mrb_jwt *data = DATA_PTR(self);
@@ -178,6 +186,7 @@ void mrb_mruby_libjwt_gem_init(mrb_state *mrb)
 	mrb_define_method(mrb, jwt, "add_grants", mrb_jwt_add_grants, MRB_ARGS_REQ(1));
 	mrb_define_method(mrb, jwt, "set_alg", mrb_jwt_set_alg, MRB_ARGS_REQ(2));
 	mrb_define_method(mrb, jwt, "alg=", mrb_jwt_set_alg_array, MRB_ARGS_REQ(1));
+	mrb_define_method(mrb, jwt, "alg", mrb_jwt_get_alg, MRB_ARGS_NONE());
 	mrb_define_method(mrb, jwt, "encode", mrb_jwt_encode, MRB_ARGS_NONE());
 
 	mrb_define_const(mrb, jwt, "ALG_NONE",
