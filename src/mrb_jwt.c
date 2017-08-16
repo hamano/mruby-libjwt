@@ -38,15 +38,14 @@ static const struct mrb_data_type mrb_jwt_type = {
 
 static mrb_value mrb_jwt_init(mrb_state *mrb, mrb_value self)
 {
-	mrb_value arg = mrb_nil_value();
+	mrb_value arg;
 	mrb_jwt *data;
 	int rc;
 
 	data = (mrb_jwt *)DATA_PTR(self);
 	if (data) {
-		mrb_free(mrb, data);
+		mrb_jwt_free(mrb, data);
 	}
-
 	mrb_get_args(mrb, "|H", &arg);
 	data = (mrb_jwt *)mrb_malloc(mrb, sizeof(mrb_jwt));
 	if (!data) {
@@ -174,6 +173,28 @@ static mrb_value mrb_jwt_encode(mrb_state *mrb, mrb_value self)
 	return ret;
 }
 
+static mrb_value mrb_jwt_decode(mrb_state *mrb, mrb_value self)
+{
+	mrb_jwt *data;
+	char *token;
+	unsigned char *key;
+	int len;
+	int rc;
+	struct RClass *class;
+	mrb_value ret;
+
+	mrb_get_args(mrb, "zs", &token, &key, &len);
+	class = mrb_class_get(mrb, "JWT");
+	ret = mrb_obj_new(mrb, class, 0, NULL);
+	data = (mrb_jwt *)DATA_PTR(ret);
+	jwt_free(data->jwt);
+	rc = jwt_decode(&data->jwt, token, key, len);
+	if (rc) {
+		mrb_raise(mrb, E_RUNTIME_ERROR, "jwt_decode() failed.");
+	}
+	return ret;
+}
+
 void mrb_mruby_libjwt_gem_init(mrb_state *mrb)
 {
 	struct RClass *jwt;
@@ -188,6 +209,7 @@ void mrb_mruby_libjwt_gem_init(mrb_state *mrb)
 	mrb_define_method(mrb, jwt, "alg=", mrb_jwt_set_alg_array, MRB_ARGS_REQ(1));
 	mrb_define_method(mrb, jwt, "alg", mrb_jwt_get_alg, MRB_ARGS_NONE());
 	mrb_define_method(mrb, jwt, "encode", mrb_jwt_encode, MRB_ARGS_NONE());
+	mrb_define_class_method(mrb, jwt, "decode", mrb_jwt_decode, MRB_ARGS_REQ(2));
 
 	mrb_define_const(mrb, jwt, "ALG_NONE",
 			 mrb_fixnum_value(JWT_ALG_NONE));
